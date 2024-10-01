@@ -1,7 +1,13 @@
-import React from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import FeatherIcon from 'react-native-vector-icons/Feather'
 
 export default function App() {
+  const [form, setForm] = useState({
+    idioma: 'Español',
+    modoOscuro: true,
+    wifi: false,
+  });
 
   const sections = [
     {
@@ -52,7 +58,23 @@ export default function App() {
                 >
                   <TouchableOpacity onPress={() => console.log(`Presionaste ${label}`)}>
                     <View style={styles.row}>
-                      <Text>{label}</Text>
+                      <FeatherIcon name={icon} color="#616161" size={22} style={{ marginRight: 12 }} />
+                      <Text style={styles.rowLabel}>{label}</Text>
+                      <View style={styles.rowSpacer} />
+                      { type === 'select' && (
+                        <Text style={styles.rowValue}>{form[id]}</Text>
+                      )}
+                      {type === 'toggle' &&
+                        <Switch 
+                          value={form[id]} 
+                          onValueChange={value => 
+                            setForm({...form, [id]: value})
+                          } 
+                        />
+                      }
+                      {['select', 'link'].includes(type) && (
+                        <FeatherIcon name="chevron-right" color='#ababab' size={22} />
+                      )}
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -98,5 +120,31 @@ const styles = StyleSheet.create({
     color: '#a7a7a7',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
+  },
+  rowWrapper: {
+    paddingLeft: 24,
+    borderTopWidth: 1,
+    borderColor: '#e3e3e3',
+    backgroundColor: '#fff',
+  },
+  row: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingRight: 24,
+  },
+  rowLabel: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: '#000'
+  },
+  rowSpacer: {
+    flex: 1,
+  },
+  rowValue: {
+    fontSize: 17,
+    color: '#616161',
+    marginRight: 4,
   },
 });
